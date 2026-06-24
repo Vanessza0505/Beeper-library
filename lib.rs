@@ -1,6 +1,7 @@
 #![no_std]
 
 use embassy_time::Timer;
+use embassy_time::{Duration, Timer};
 
 
 pub async fn beep(beeper: &mut esp_hal::gpio::Output<'_>, status: bool, beep_number: u32){
