@@ -9,9 +9,9 @@ pub async fn beep(beeper: &mut esp_hal::gpio::Output<'_>, status: bool, beep_num
     else{
         for _ in 0..beep_number{
             beeper.set_high();
-            Timer::after_millis(1000).await;
+            Timer::after(Duration::from_millis(1000)).await;
             beeper.set_low();
-            Timer::after_millis(1000).await;
+            Timer::after(Duration::from_millis(1000)).await;
         }
     }
 }
