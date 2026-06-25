@@ -6,6 +6,8 @@
     holding buffers for the duration of a data transfer."
 )]
 #![deny(clippy::large_stack_frames)]
+
+
 use esp_hal::clock::CpuClock;
 use esp_hal::timer::timg::TimerGroup;
 
@@ -15,9 +17,10 @@ use esp_println as _;
 use defmt::info;
 use defmt::error;
 
-use Beeper_library::beep;
-use esp_hal::gpio::{Output, Level, OutputConfig};
 
+use embassy_time::Timer;
+use Beeper_library::Beeper;
+use esp_hal::gpio::{Output, Level, OutputConfig};
 
 
 
@@ -44,14 +47,19 @@ async fn main(spawner: Spawner) -> ! {
 
     info!("Embassy initialized!");
     let _ = spawner;
+    
+    let mut buzzer = Output::new(peripherals.GPIO12, Level::Low, OutputConfig::default());
 
-    let mut beeper = Output::new(peripherals.GPIO12, Level::Low, OutputConfig::default());
 
-    // true = beeping, 3 = three beep 
-    let status = true; // true = on, false = off
-    let beeping_number = 1; // how many times should it beep
+    let mut beeper = Beeper::new(buzzer, 2, true, 250).await;
 
-    beep(&mut beeper, status, beeping_number).await;
 
-    loop {}
+    loop {
+
+        beeper.beep_n_times().await;
+
+        // wait 1 second until the next beep
+        Timer::after_millis(1000).await;
+
+    }
 }
