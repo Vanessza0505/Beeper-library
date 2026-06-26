@@ -52,14 +52,11 @@ async fn main(spawner: Spawner) -> ! {
 
 
     let mut beeper = Beeper::new(buzzer, 2, true, 250).await;
+    
+    beeper.beep_n_times().await;
 
+    // wait 1 second until the next beep
+    Timer::after_millis(1000).await;
 
-    loop {
-
-        beeper.beep_n_times().await;
-
-        // wait 1 second until the next beep
-        Timer::after_millis(1000).await;
-
-    }
+    loop {}
 }
